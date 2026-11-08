@@ -108,10 +108,17 @@ def verify_user(step: dict, mistake_type: str, description: str, observations: l
     )
 
 
-REPORT_SYSTEM = """You write the end-of-session summary for a hands-on task (a repair, a build, a recipe) supervised by an AI assistant. The reader is the person who did it.
+REPORT_SYSTEM = """You write the end-of-session summary for a hands-on task (a repair, a build, a recipe) supervised by an AI assistant watching through a camera. The reader is the person who did it.
 
-Write one paragraph, 3-5 sentences, plain text: what was done, which mistakes were caught and how they were resolved, any overridden warnings (false alarms), and one concrete tip for next time. No headings, no bullet points, no praise padding."""
+Write one paragraph, 3-5 sentences, plain text: what was confirmed done, which mistakes were caught and how they were resolved, any overridden warnings (false alarms), and one concrete tip for next time.
+
+Strict rules:
+- Only state what the step list and timeline show. A step marked "done" was confirmed by the camera. A step marked "skipped" or "todo" was NOT observed: never say the person did it; say it was skipped or not checked.
+- Only mention alerts that appear in the timeline. If there were none, say so.
+- No headings, no bullet points, no praise padding."""
 
 
-def report_user(task: str, timeline: list[str]) -> str:
-    return f"Task: {task}\nTimeline (oldest first):\n" + ("\n".join(timeline) or "(no events)")
+def report_user(task: str, timeline: list[str], steps_status: list[str] | None = None) -> str:
+    steps = "\n".join(f"- {x}" for x in steps_status or []) or "(none)"
+    return (f"Task: {task}\nSteps (status):\n{steps}\n"
+            f"Timeline (oldest first):\n" + ("\n".join(timeline) or "(no events)"))

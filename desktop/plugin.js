@@ -369,7 +369,7 @@ function Steps({ session }) {
 function Events({ session }) {
   const evs = (session.events || []).slice(0, 6)
   if (!evs.length) return null
-  const color = k => (k === 'stop' ? 'text-(--ui-red)' : k === 'ask' || k === 'warn' ? 'text-(--ui-yellow)' : k === 'step_done' ? 'text-(--ui-green)' : 'text-(--ui-text-tertiary)')
+  const color = k => (k === 'stop' ? 'text-(--ui-red)' : k === 'ask' || k === 'warn' ? 'text-(--ui-yellow)' : k === 'step_done' ? 'text-(--ui-green)' : k === 'skip' ? 'text-(--ui-text-quaternary)' : 'text-(--ui-text-tertiary)')
   return jsxs('div', {
     className: 'flex flex-col gap-1',
     children: [

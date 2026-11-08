@@ -427,10 +427,14 @@ class Worker:
             elif t == "dismiss":
                 state["alert"] = None
             elif t in ("skip", "back"):
+                left = _step(state)
                 _advance(state, 1 if t == "skip" else -1, manual=True)
                 nxt = _step(state)
-                _event(state, "info", f"Step {state['current_step'] + 1}: {nxt['title']}." if nxt
-                       else "All steps done. Finish when you're ready.")
+                verb = "Skipped" if t == "skip" else "Went back from"
+                what = f"{verb}: {left['title'].lower()}. " if left else ""
+                _event(state, "skip" if t == "skip" else "info",
+                       what + (f"Now step {state['current_step'] + 1}: {nxt['title'].lower()}." if nxt
+                               else "No steps left. Finish when you're ready."))
             elif t == "finish":
                 state["status"] = "finishing"
         return bool(cmds)
@@ -554,10 +558,12 @@ class Worker:
             timeline.append(f"+{(e['at'] - t0) // 1000}s {e['kind']}: {e['message']}"
                             + (f" (reason: {e['reason']})" if e.get("reason") else ""))
         done = sum(1 for v in state["step_status"].values() if v == "done")
+        steps_status = [f"{s['title']}: {state['step_status'].get(s['id'], 'todo')}" for s in state["guide"]["steps"]]
         summary = None
         if not state["demo"]:
             summary = _call(self.llm, state, stage="report", task=TASK_PLAN, system=prompts.REPORT_SYSTEM,
-                            text=prompts.report_user(state["task"], timeline), schema=None, max_tokens=400, timeout=40)
+                            text=prompts.report_user(state["task"], timeline, steps_status), schema=None,
+                            max_tokens=400, timeout=40)
         if not summary:
             s = state["stats"]
             how = "in the scripted demo" if state["demo"] else "by camera"
