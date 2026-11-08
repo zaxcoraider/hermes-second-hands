@@ -1,0 +1,390 @@
+{
+  "DICE_ONION": {
+    "title": "Dice an onion safely",
+    "device": "Onion",
+    "category": "cooking",
+    "setup": "Mount the phone 40–60 cm above the cutting board, camera facing down, so both hands and the knife are in frame.",
+    "sources": [
+      {
+        "title": "Serious Eats: How to dice an onion",
+        "url": "https://www.seriouseats.com/knife-skills-how-to-dice-an-onion"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "title": "Steady the cutting board",
+        "instruction": "Put a damp towel under the board so it can't slide.",
+        "visualCheck": "The board sits flat with a towel edge visible underneath.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s2",
+        "title": "Halve the onion through the root",
+        "instruction": "Cut the onion in half from top to root, then trim the top. Keep the root on to hold the layers together.",
+        "visualCheck": "Two onion halves lie flat side down, root ends still attached.",
+        "commonMistakes": [
+          {
+            "type": "cutting_toward_hand",
+            "description": "Slicing toward the hand that's holding the onion is how most kitchen cuts happen.",
+            "looksLike": "The knife edge moving in the direction of the other hand's fingers."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s3",
+        "title": "Peel the halves",
+        "instruction": "Peel off the papery skin and the first tough layer.",
+        "visualCheck": "Two clean, peeled halves with no brown skin left.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s4",
+        "title": "Make vertical cuts with a claw grip",
+        "instruction": "Hold the onion with fingertips curled under, knuckles against the blade. Cut thin slices toward the root without cutting through it.",
+        "visualCheck": "Evenly spaced slices fanned from the root, fingertips tucked behind the knuckles.",
+        "commonMistakes": [
+          {
+            "type": "flat_fingers",
+            "description": "Flat, extended fingertips in front of the blade get cut.",
+            "looksLike": "Fingertips flat on the onion and ahead of the knuckles, near the knife edge."
+          }
+        ],
+        "severity": "high",
+        "safety": true
+      },
+      {
+        "id": "s5",
+        "title": "Cross-cut to dice",
+        "instruction": "Turn the onion and slice across the cuts, still using a claw grip, walking your fingers back as you go.",
+        "visualCheck": "Small even cubes piled on the board, the root end left as a stub.",
+        "commonMistakes": [
+          {
+            "type": "flat_fingers",
+            "description": "Flat, extended fingertips in front of the blade get cut.",
+            "looksLike": "Fingertips flat on the onion and ahead of the knuckles, near the knife edge."
+          }
+        ],
+        "severity": "high",
+        "safety": true
+      },
+      {
+        "id": "s6",
+        "title": "Move the dice with the knife spine",
+        "instruction": "Turn the knife over and scrape the onion into a bowl with the back of the blade.",
+        "visualCheck": "Diced onion in a bowl; the board is mostly clear.",
+        "commonMistakes": [
+          {
+            "type": "edge_scraping",
+            "description": "Scraping with the sharp edge dulls the knife and can slip.",
+            "looksLike": "The blade edge, not the spine, dragging across the board."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      }
+    ]
+  },
+  "FLATPACK_BOOKSHELF": {
+    "title": "Assemble a flat-pack bookshelf",
+    "device": "Flat-pack bookshelf",
+    "category": "furniture",
+    "setup": "Mount the phone 60–80 cm above the floor area so a whole panel is in frame.",
+    "sources": [
+      {
+        "title": "IKEA: Assembly instructions",
+        "url": "https://www.ikea.com/us/en/customer-service/product-support/assembly-instructions/"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "title": "Lay out and count the parts",
+        "instruction": "Lay the panels on a rug or the box, and sort the screws, dowels and cam locks by type.",
+        "visualCheck": "Panels on a soft surface and hardware sorted into small groups.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s2",
+        "title": "Insert the dowels and cam bolts",
+        "instruction": "Push the wooden dowels into the side panels and screw the cam bolts in by hand.",
+        "visualCheck": "Every pre-drilled hole on the side panel edges has a dowel or a cam bolt.",
+        "commonMistakes": [
+          {
+            "type": "dowel_missing",
+            "description": "A missing dowel makes the joint weak and the shelf wobbly.",
+            "looksLike": "An empty pre-drilled hole on a panel edge next to filled ones."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s3",
+        "title": "Join the sides to the base",
+        "instruction": "Fit the side panels onto the base with the finished edges facing the front.",
+        "visualCheck": "Sides standing on the base, smooth finished edges all on the same side.",
+        "commonMistakes": [
+          {
+            "type": "panel_backwards",
+            "description": "A panel fitted back-to-front puts raw edges and holes on show and the back won't fit.",
+            "looksLike": "One panel showing unfinished chipboard or extra holes on the front edge."
+          }
+        ],
+        "severity": "high",
+        "safety": false
+      },
+      {
+        "id": "s4",
+        "title": "Lock the cam fittings",
+        "instruction": "Drop the cam locks in with the arrow pointing at the bolt hole, then turn clockwise until snug.",
+        "visualCheck": "Cam locks seated flush with their arrows turned toward the joint.",
+        "commonMistakes": [
+          {
+            "type": "cam_wrong_way",
+            "description": "A cam lock facing the wrong way doesn't grip the bolt and the joint pulls apart.",
+            "looksLike": "A cam lock arrow pointing away from the panel edge."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s5",
+        "title": "Nail on the back panel",
+        "instruction": "Lay the frame face down, square it, and nail the back panel along the edges.",
+        "visualCheck": "Back panel flush with all four edges and nails evenly spaced.",
+        "commonMistakes": [],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s6",
+        "title": "Fit the anti-tip strap",
+        "instruction": "Screw the anti-tip strap to the top panel and anchor it to the wall before loading the shelf.",
+        "visualCheck": "A strap runs from the top of the shelf to a wall fixing.",
+        "commonMistakes": [
+          {
+            "type": "no_anti_tip",
+            "description": "An unanchored bookshelf can tip over onto someone, especially a child.",
+            "looksLike": "The shelf standing upright with no strap at the top and items going onto it."
+          }
+        ],
+        "severity": "high",
+        "safety": true
+      }
+    ]
+  },
+  "LED_BREADBOARD": {
+    "title": "LED circuit on a breadboard",
+    "device": "Breadboard starter kit",
+    "category": "electronics",
+    "setup": "Mount the phone 20–30 cm above the breadboard so all rails are in frame.",
+    "sources": [
+      {
+        "title": "SparkFun: How to use a breadboard",
+        "url": "https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "title": "Unplug the battery pack",
+        "instruction": "Make sure the battery pack is disconnected from the breadboard rails before placing parts.",
+        "visualCheck": "Battery pack wires are not plugged into the breadboard.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s2",
+        "title": "Place the LED",
+        "instruction": "Push the LED into the board across two rows. The long leg (anode) goes toward the + rail.",
+        "visualCheck": "The LED sits across two rows, longer leg on the side facing the red + rail.",
+        "commonMistakes": [
+          {
+            "type": "led_reversed",
+            "description": "A reversed LED won't light, and it confuses the rest of the build.",
+            "looksLike": "The shorter LED leg (or the flat edge of the LED rim) on the side facing the + rail."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s3",
+        "title": "Add the 220 Ω resistor",
+        "instruction": "Connect the resistor from the LED's long-leg row to the + rail.",
+        "visualCheck": "A resistor (striped body) bridges the LED anode row and the + rail.",
+        "commonMistakes": [
+          {
+            "type": "missing_resistor",
+            "description": "Without a resistor the LED takes too much current and burns out.",
+            "looksLike": "A plain jumper wire going straight from the LED row to the + rail, with no striped resistor."
+          }
+        ],
+        "severity": "high",
+        "safety": false
+      },
+      {
+        "id": "s4",
+        "title": "Wire the LED to ground",
+        "instruction": "Run a jumper from the LED's short-leg row to the − rail.",
+        "visualCheck": "A jumper connects the LED cathode row to the blue − rail.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s5",
+        "title": "Connect the battery pack",
+        "instruction": "Plug red into + and black into −. The LED should light.",
+        "visualCheck": "Battery pack plugged into the rails and the LED is lit.",
+        "commonMistakes": [
+          {
+            "type": "battery_reversed",
+            "description": "Swapped battery wires mean the LED stays dark.",
+            "looksLike": "Red wire in the blue − rail or black wire in the red + rail."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      }
+    ]
+  },
+  "REDMI_NOTE_8_BATTERY": {
+    "title": "Redmi Note 8 battery replacement",
+    "device": "Xiaomi Redmi Note 8",
+    "category": "electronics",
+    "setup": "Mount the phone 15–20 cm above the bench, camera facing down, in bright even light.",
+    "sources": [
+      {
+        "title": "iFixit: Xiaomi Redmi Note 8 repair",
+        "url": "https://www.ifixit.com/Device/Xiaomi_Redmi_Note_8"
+      }
+    ],
+    "steps": [
+      {
+        "id": "s1",
+        "title": "Power off and remove the SIM tray",
+        "instruction": "Hold the power button and confirm power off. Eject the SIM tray with the SIM tool.",
+        "visualCheck": "Screen is black and the SIM tray lies on the mat next to the phone.",
+        "commonMistakes": [],
+        "severity": "low",
+        "safety": false
+      },
+      {
+        "id": "s2",
+        "title": "Open the back cover",
+        "instruction": "Warm the back cover edges, then slide a plastic pick around the seam. Lift the cover from the bottom only a few centimetres: the fingerprint flex is still attached at the top.",
+        "visualCheck": "The back cover is lifted like a book hinge and the fingerprint flex cable is visible, still intact.",
+        "commonMistakes": [
+          {
+            "type": "cover_pulled_with_flex",
+            "description": "Pulling the cover fully away before disconnecting the fingerprint flex tears the cable.",
+            "looksLike": "Back cover held far from the phone body with a thin ribbon cable stretched between them."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s3",
+        "title": "Remove the motherboard shield screws",
+        "instruction": "Remove the Phillips screws holding the motherboard shield. Lay them out on the mat in the same pattern as they came out: they are not all the same length.",
+        "visualCheck": "Screws are laid out in a pattern on the mat and the shield lifts off the top of the board.",
+        "commonMistakes": [
+          {
+            "type": "screws_mixed",
+            "description": "Dropping all screws in one pile makes it easy to put a long screw in a short hole later.",
+            "looksLike": "Several screws together in a single pile or loose in a cup."
+          }
+        ],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s4",
+        "title": "Disconnect the battery",
+        "instruction": "With a plastic spudger, pry the battery connector straight up off the board. Do this before touching any other connector.",
+        "visualCheck": "The battery connector is lifted off its socket and bent slightly away so it can't touch the board.",
+        "commonMistakes": [
+          {
+            "type": "flex_before_battery",
+            "description": "Unplugging the display or another flex while the battery is connected can short the board.",
+            "looksLike": "A tool or fingers at a connector other than the battery's while the battery connector is still seated."
+          },
+          {
+            "type": "metal_tool_on_battery",
+            "description": "Metal tweezers or a screwdriver on the battery connector can bridge the contacts.",
+            "looksLike": "A shiny metal tool tip touching the battery connector."
+          }
+        ],
+        "severity": "high",
+        "safety": true
+      },
+      {
+        "id": "s5",
+        "title": "Disconnect the display and charging flex",
+        "instruction": "Now that the battery is disconnected, pry up the display connector and the charging-board flex.",
+        "visualCheck": "Display and charging flex connectors are lifted off the board.",
+        "commonMistakes": [],
+        "severity": "medium",
+        "safety": false
+      },
+      {
+        "id": "s6",
+        "title": "Swap the battery",
+        "instruction": "Pull the adhesive tabs slowly at a low angle to release the battery. Never pry under the battery with metal, never bend or puncture it.",
+        "visualCheck": "The old battery is out, flat and undamaged, and the new battery is seated in the frame.",
+        "commonMistakes": [
+          {
+            "type": "prying_battery",
+            "description": "Levering a lithium battery with a metal tool can puncture it and start a fire.",
+            "looksLike": "A tool pushed under the battery, or the battery visibly bent."
+          }
+        ],
+        "severity": "high",
+        "safety": true
+      },
+      {
+        "id": "s7",
+        "title": "Refit the shield screws",
+        "instruction": "Put each screw back in the hole it came from. The long screw goes only in the marked corner.",
+        "visualCheck": "The shield is back on and every screw is seated flush.",
+        "commonMistakes": [
+          {
+            "type": "long_screw_wrong_hole",
+            "description": "A long screw in a short hole can crack the board underneath.",
+            "looksLike": "The longest screw being driven into a hole other than the marked corner, or a screw head sitting high."
+          }
+        ],
+        "severity": "high",
+        "safety": false
+      },
+      {
+        "id": "s8",
+        "title": "Reconnect flexes, then the battery last",
+        "instruction": "Press the display and charging flex connectors home first. Reconnect the battery last, then close the cover.",
+        "visualCheck": "All connectors seated; the battery connector is the last one pressed down.",
+        "commonMistakes": [
+          {
+            "type": "battery_reconnected_first",
+            "description": "Reconnecting the battery before the display can damage the display driver.",
+            "looksLike": "Battery connector pressed down while the display flex is still loose."
+          }
+        ],
+        "severity": "medium",
+        "safety": true
+      }
+    ]
+  }
+}

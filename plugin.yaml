@@ -1,0 +1,19 @@
+name: second-hands
+version: "0.1.0"
+manifest_version: 2
+description: "Hands-on task coach: watches your hands through a camera in Hermes Desktop and says STOP before a costly or dangerous mistake."
+license: MIT
+homepage: https://github.com/zaxcoraider/hermes-second-hands
+tags: [desktop, vision, camera, repair, safety]
+requires_hermes: ">=0.23.0"
+provides_tools:
+  - second_hands_start
+  - second_hands_status
+  - second_hands_finish
+provides_hooks: []
+config_schema:
+  demo_mode:
+    type: bool
+    default: false
+    label: "Demo mode by default"
+    description: "Run sessions with scripted camera observations and no model calls (for trying the plugin without a camera)."
