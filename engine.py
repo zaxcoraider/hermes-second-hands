@@ -138,8 +138,9 @@ _LAST_ERROR: list[str] = [""]
 def _friendly(exc: Exception, task: str) -> str:
     msg = str(exc).strip().splitlines()[0][:240] if str(exc).strip() else type(exc).__name__
     if "No LLM provider" in msg or "unavailable" in msg:
-        return (f"No model is set up for {task}. Run `hermes model` (or Settings → Models), "
-                f"then pick a vision model for the {task} slot. Or try `/repair demo <task>`.")
+        kind = "a vision model" if task == TASK_VISION else "a model"
+        return (f"No model is set up for {task}. Run `hermes model` (or Settings → Models → Auxiliary) "
+                f"and pick {kind} for it. Or try `/repair demo <task>`, which needs no model.")
     return msg
 
 
