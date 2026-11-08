@@ -35,6 +35,65 @@ def _demo_default() -> bool:
         return False
 
 
+def _web_research_enabled() -> bool:
+    try:
+        return bool(_ctx.get_config("web_research", default=True))
+    except Exception:
+        return True
+
+
+def _research(task: str) -> tuple[str, list[dict]]:
+    """Ground the guide in real how-tos (iFixit and the like) through Hermes's own web tools.
+    Best effort: any failure just means the planner uses the model's own knowledge."""
+    try:
+        found = json.loads(_ctx.dispatch_tool("web_search", {"query": f"{task} step by step guide", "limit": 4}))
+        items = [i for i in ((found.get("data") or {}).get("web") or []) if i.get("url")][:3]
+    except Exception as exc:
+        log.info("second-hands research skipped: %s", exc)
+        return "", []
+    sources = [{"title": str(i.get("title", ""))[:120], "url": i["url"]} for i in items]
+    parts = [f"Source: {i.get('title', '')} ({i['url']})\n{str(i.get('description', ''))[:3000]}" for i in items]
+    if items:
+        try:
+            ex = json.loads(_ctx.dispatch_tool("web_extract", {"urls": [items[0]["url"]]}))
+            page = next((r for r in ex.get("results") or [] if r.get("content")), None)
+            if page:
+                parts.insert(0, f"Full guide: {page.get('title', '')} ({page['url']})\n{str(page['content'])[:14000]}")
+        except Exception as exc:
+            log.info("second-hands extract skipped: %s", exc)
+    return "\n\n".join(parts), sources
+
+
+def _live_context(**kwargs):
+    """pre_llm_call: while a session is live, tell the agent where the user is, so
+    "what step am I on?" or "what did I do wrong?" just works with busy hands."""
+    try:
+        sid = store.active_id()
+        st = store.load(sid) if sid else None
+        if not st or st["status"] not in ("ready", "live"):
+            return None
+        steps = st["guide"]["steps"]
+        i = st["current_step"]
+        cur = steps[i] if i < len(steps) else None
+        lines = [f"[Second Hands live session {st['id']}: \"{st['task']}\", status {st['status']}, "
+                 f"step {min(i + 1, len(steps))}/{len(steps)}]"]
+        if cur:
+            lines.append(f"Current step: {cur['title']}: {cur['instruction']}")
+        obs = st.get("last_observation")
+        if obs:
+            lines.append(f"Camera sees (latest frame): {obs['observation']}")
+        if st.get("alert"):
+            a = st["alert"]
+            lines.append(f"Open alert ({a['kind'].upper()}): {a['message']}" + (f" Why: {a['reason']}" if a.get("reason") else ""))
+        recent = [e for e in st["events"] if e["kind"] in ("stop", "warn", "ask")][:3]
+        if recent:
+            lines.append("Recent alerts: " + " | ".join(f"{e['kind']}: {e['message']}" for e in recent))
+        lines.append("The user's hands are busy: answer in one or two short sentences. Use second_hands_status for more.")
+        return {"context": "\n".join(lines)}
+    except Exception:
+        return None
+
+
 def _ensure_worker(sid: str) -> None:
     with _lock:
         w = _workers.get(sid)
@@ -61,8 +120,14 @@ def start_session(task: str, notes: str = "", demo: bool | None = None) -> dict:
     if not task:
         return {"ok": False, "error": "Say what you're working on, e.g. 'replace a Redmi Note 8 battery'."}
     demo = _demo_default() if demo is None else bool(demo)
+    sources: list[dict] = []
+    if (not (notes or "").strip() and not demo and not engine.BLOCKED_TASKS.search(task)
+            and engine.curated_guide(task) is None and _web_research_enabled()):
+        notes, sources = _research(task)
     try:
         guide, origin = engine.build_guide(_ctx.llm, task, notes or "")
+        if origin == "planned" and sources:
+            guide["sources"] = sources
     except engine.Refused as exc:
         return {"ok": False, "refused": True, "error": str(exc)}
     except Exception as exc:
@@ -185,8 +250,10 @@ def _cmd_repair(raw_args: str) -> str:
     r = start_session(arg[5:] if demo else arg, demo=True if demo else None)
     if not r.get("ok"):
         return r.get("error", "Couldn't start.")
+    based = ", ".join(src["title"] for src in r.get("sources") or [])
     return (f"Second Hands: {r['guide_title']} ({len(r['steps'])} steps{', demo' if r['demo'] else ''}).\n"
-            f"Camera: {r['camera_setup']}\nOpen the Second Hands pane, pick your camera and press Start.")
+            + (f"Based on: {based}\n" if based else "")
+            + f"Camera: {r['camera_setup']}\nOpen the Second Hands pane, pick your camera and press Start.")
 
 
 def register(ctx):
@@ -202,5 +269,6 @@ def register(ctx):
     ctx.register_tool(name="second_hands_start", toolset="second-hands", schema=START_SCHEMA, handler=_tool_start)
     ctx.register_tool(name="second_hands_status", toolset="second-hands", schema=STATUS_SCHEMA, handler=_tool_status)
     ctx.register_tool(name="second_hands_finish", toolset="second-hands", schema=FINISH_SCHEMA, handler=_tool_finish)
+    ctx.register_hook("pre_llm_call", _live_context)
     ctx.register_command("repair", _cmd_repair, description="Start a camera-supervised hands-on task (Second Hands)",
                          args_hint="<task> | demo <task> | status | finish")

@@ -91,6 +91,10 @@ OBSERVE_SCHEMA = {
         },
         "needCloserLook": {"type": "boolean"},
         "visibility": {"type": "string"},
+        "focus": {
+            "type": ["object", "null"],
+            "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "w": {"type": "number"}, "h": {"type": "number"}},
+        },
     },
     "required": ["stepState", "observation"],
 }
@@ -332,6 +336,17 @@ def _scripted_gate(step: dict, cand: dict, mistake: dict | None) -> dict:
     return {"action": "warn", "line": f"Stop. {what}."}
 
 
+def _focus(f) -> dict | None:
+    """Box (fractions of the frame, top-left origin) around the hands and the part, or None."""
+    try:
+        x, y, w, h = (max(0.0, min(1.0, float(f[k]))) for k in ("x", "y", "w", "h"))
+    except (TypeError, KeyError, ValueError):
+        return None
+    if w < 0.03 or h < 0.03:
+        return None
+    return {"x": x, "y": y, "w": min(w, 1 - x), "h": min(h, 1 - y)}
+
+
 def _clamp(line: str, n: int = 15) -> str:
     w = line.strip().split()
     return line.strip() if len(w) <= n else " ".join(w[:n]).rstrip(",;:") + "."
@@ -443,7 +458,8 @@ class Worker:
             m = None  # the model can't invent new alarms
         o = {"step_id": step["id"], "at": store.now_ms(), "stepState": obs["stepState"],
              "observation": str(obs.get("observation", ""))[:200], "mistake": m,
-             "needCloserLook": bool(obs.get("needCloserLook")), "visibility": obs.get("visibility", "good")}
+             "needCloserLook": bool(obs.get("needCloserLook")), "visibility": obs.get("visibility", "good"),
+             "focus": _focus(obs.get("focus"))}
         self._observe(state, o, image)
 
     def _observe(self, state: dict, o: dict, image: bytes | None) -> None:
@@ -491,6 +507,7 @@ class Worker:
                 kind, line = "ask", "Hold on. Is that right? Hold it closer."
                 reason = str((verdict or {}).get("reason") or reason) if isinstance(verdict, dict) else reason
         e = _event(state, kind, line, mistake_type=cand["type"], reason=reason, verified=verified,
+                   focus=recent[0].get("focus") if recent else None,
                    manual=f"{step['title']}: {step['instruction']}" +
                           (f"\nCommon mistake: {mistake['description']}" if mistake else ""))
         if image:
@@ -563,6 +580,7 @@ def summarize(state: dict) -> dict:
     return {
         "session_id": state["id"], "task": state["task"], "status": state["status"],
         "guide_title": state["guide"]["title"], "camera_setup": state["guide"].get("setup"),
+        "sources": state["guide"].get("sources") or [],
         "step": f"{min(state['current_step'] + 1, len(steps))}/{len(steps)}",
         "current_step": cur["title"] if cur else None,
         "steps": [{"title": s["title"], "status": state["step_status"].get(s["id"])} for s in steps],

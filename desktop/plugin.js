@@ -60,6 +60,28 @@ function speak(text) {
   }
 }
 
+function chime() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext
+    if (!AC || !$voice.get()) return
+    const ac = new AC()
+    ;[880, 660].forEach((f, i) => {
+      const o = ac.createOscillator()
+      const g = ac.createGain()
+      o.type = 'square'
+      o.frequency.value = f
+      g.gain.setValueAtTime(0.08, ac.currentTime + i * 0.16)
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + i * 0.16 + 0.15)
+      o.connect(g).connect(ac.destination)
+      o.start(ac.currentTime + i * 0.16)
+      o.stop(ac.currentTime + i * 0.16 + 0.16)
+    })
+    setTimeout(() => ac.close(), 600)
+  } catch {
+    // audio is a nicety
+  }
+}
+
 function announce(s) {
   const e = (s.events || [])[0]
   if (!e) return
@@ -69,6 +91,7 @@ function announce(s) {
   }
   if (e.id === lastSpoken) return
   lastSpoken = e.id
+  if (e.kind === 'stop') chime()
   if (e.speak !== false) speak(e.message)
   if (e.kind === 'stop' && lastStopNotified !== e.id) {
     lastStopNotified = e.id
@@ -152,7 +175,11 @@ function Camera({ session }) {
   })
   const [camError, setCamError] = useState(null)
   const [sent, setSent] = useState(0)
+  const [aspect, setAspect] = useState(4 / 3)
   const watching = session && session.status === 'live' && !session.demo
+  const stopNow = !!(session && session.alert && session.alert.kind === 'stop')
+  const lastObs = session && session.last_observation
+  const focus = watching && lastObs && lastObs.focus && Date.now() - lastObs.at < 8000 ? lastObs.focus : null
 
   // Open the chosen camera.
   useEffect(() => {
@@ -216,9 +243,25 @@ function Camera({ session }) {
     className: 'flex flex-col gap-1.5',
     children: [
       jsxs('div', {
-        className: 'relative overflow-hidden rounded-lg border border-(--ui-stroke-secondary) bg-(--ui-bg-quaternary) aspect-[4/3]',
+        className: cls(
+          'relative overflow-hidden rounded-lg border-2 bg-(--ui-bg-quaternary)',
+          stopNow ? 'animate-pulse border-(--ui-red)' : 'border-(--ui-stroke-secondary)'
+        ),
+        style: { aspectRatio: String(aspect) },
         children: [
-          jsx('video', { ref: video, autoPlay: true, muted: true, playsInline: true, className: 'h-full w-full object-cover' }),
+          jsx('video', {
+            ref: video,
+            autoPlay: true,
+            muted: true,
+            playsInline: true,
+            onLoadedMetadata: e => e.target.videoWidth && setAspect(e.target.videoWidth / e.target.videoHeight),
+            className: 'h-full w-full object-cover'
+          }),
+          focus &&
+            jsx('div', {
+              className: cls('pointer-events-none absolute rounded-sm border-2 transition-all duration-500', stopNow ? 'border-(--ui-red)' : 'border-(--ui-accent)'),
+              style: { left: `${focus.x * 100}%`, top: `${focus.y * 100}%`, width: `${focus.w * 100}%`, height: `${focus.h * 100}%` }
+            }),
           camError &&
             jsx('div', {
               className: 'absolute inset-0 flex items-center justify-center p-4 text-center text-[0.75rem] text-(--ui-text-secondary)',
@@ -423,7 +466,13 @@ function Pane() {
         className: 'flex flex-col gap-0.5',
         children: [
           jsx(Label, { children: session.demo ? 'Demo · ' + session.task : session.task }),
-          jsx('div', { className: 'text-[0.9375rem] font-semibold', children: session.guide.title })
+          jsx('div', { className: 'text-[0.9375rem] font-semibold', children: session.guide.title }),
+          (session.guide.sources || []).length > 0 &&
+            jsx('div', {
+              className: 'truncate text-[0.6875rem] text-(--ui-text-tertiary)',
+              title: session.guide.sources.map(x => x.url).join('\n'),
+              children: 'Based on: ' + session.guide.sources.map(x => x.title.split(/ [-|–] /)[0]).join(' · ')
+            })
         ]
       }),
       session && session.status !== 'done' && !session.demo && jsx(Camera, { session }),

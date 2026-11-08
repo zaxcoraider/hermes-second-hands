@@ -10,8 +10,14 @@ provides_tools:
   - second_hands_start
   - second_hands_status
   - second_hands_finish
-provides_hooks: []
+provides_hooks:
+  - pre_llm_call
 config_schema:
+  web_research:
+    type: bool
+    default: true
+    label: "Research tasks on the web"
+    description: "Before planning a task with no built-in guide, look up real how-tos with Hermes's web_search and web_extract tools and build the steps from them."
   demo_mode:
     type: bool
     default: false

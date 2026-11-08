@@ -49,7 +49,8 @@ Return ONLY JSON:
   "observation": one short factual sentence about what the hands and tools are doing,
   "mistake": null | { "type": one of the listed mistake types, "confidence": 0-1, "evidence": what in the frame shows it },
   "needCloserLook": true if a closer or clearer view would change your answer,
-  "visibility": "good" | "poor"
+  "visibility": "good" | "poor",
+  "focus": null | { "x": 0-1, "y": 0-1, "w": 0-1, "h": 0-1 }  (box around the hands/tool and the part they are working on; x,y = top-left as a fraction of the frame width/height)
 }"""
 
 
