@@ -35,7 +35,17 @@ Then:
    | `second_hands_fast` | warn / ask / silent + the spoken line | A small fast model, e.g. `nvidia/Nemotron-3_5-Lightning` |
    | `second_hands_plan` | Builds guides, double-checks STOPs, writes the report | Your strongest model |
 
-   Turn reasoning off for the vision slot if your model spends its whole budget thinking (`reasoning_effort: "none"`).
+   **Turn thinking off on these slots.** Alerts need speed, not deliberation. For Nemotron on Nebius Token Factory (and other vLLM-served models), `reasoning_effort: "none"` isn't enough; add the model's own switch. It took the gate from 4.8 s to 0.4 s and the camera check from 5.8 s to 1.7 s:
+
+   ```yaml
+   auxiliary:
+     second_hands_fast:
+       provider: nebius-token-factory
+       model: nvidia/Nemotron-3_5-Lightning
+       extra_body:
+         chat_template_kwargs:
+           enable_thinking: false
+   ```
 3. **Camera:** any camera macOS/Windows/Linux sees. To use a phone, run it as a webcam (Continuity Camera / Desk View on iPhone, Iriun or DroidCam on Android) and mount it 15–60 cm above the work, facing down.
 
 ## Use
