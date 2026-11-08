@@ -132,6 +132,17 @@ def _cost(model: str, usage) -> float:
     return (getattr(usage, "input_tokens", 0) * price[0] + getattr(usage, "output_tokens", 0) * price[1]) / 1e6
 
 
+_LAST_ERROR: list[str] = [""]
+
+
+def _friendly(exc: Exception, task: str) -> str:
+    msg = str(exc).strip().splitlines()[0][:240] if str(exc).strip() else type(exc).__name__
+    if "No LLM provider" in msg or "unavailable" in msg:
+        return (f"No model is set up for {task}. Run `hermes model` (or Settings → Models), "
+                f"then pick a vision model for the {task} slot. Or try `/repair demo <task>`.")
+    return msg
+
+
 def _loose_json(text: str) -> Any:
     text = (text or "").strip()
     m = re.search(r"\{.*\}", text, re.S)
@@ -170,9 +181,14 @@ def _call(llm, state: dict | None, *, stage: str, task: str, system: str, text: 
         model = getattr(r, "model", "") or ""
         cost = _cost(model, getattr(r, "usage", None))
         ok = out is not None
+        if ok and state is not None and (state.get("last_error") or {}).get("stage") == stage:
+            state["last_error"] = None
         return out
     except Exception as exc:  # never let a model failure kill the worker
         log.warning("second-hands %s call failed: %s", stage, exc)
+        _LAST_ERROR[0] = _friendly(exc, task)
+        if state is not None:
+            state["last_error"] = {"stage": stage, "message": _LAST_ERROR[0], "at": store.now_ms()}
         return None
     finally:
         if state is not None:
@@ -246,7 +262,8 @@ def build_guide(llm, task: str, notes: str = "", prefer_curated: bool = True) ->
     g = curated_guide(task)
     if g:
         return g, "curated"
-    raise RuntimeError("Couldn't build a guide for this task. Try describing it in more detail.")
+    why = _LAST_ERROR[0] or "The planner model returned no usable steps. Try describing the task in more detail."
+    raise RuntimeError(f"Couldn't build a guide: {why}")
 
 
 # ---------------------------------------------------------------- session

@@ -480,6 +480,10 @@ function Pane() {
         className: 'rounded-lg border border-(--ui-stroke-secondary) bg-(--ui-bg-quaternary) p-3 text-center text-[0.75rem] text-(--ui-text-secondary)',
         children: 'Demo mode: scripted camera observations, no model calls.'
       }),
+      session && session.last_error && session.status !== 'done' && jsx('div', {
+        className: 'rounded-md border border-(--ui-yellow) p-2 text-[0.6875rem] text-(--ui-text-secondary)',
+        children: `Model problem (${session.last_error.stage}): ${session.last_error.message}`
+      }),
       session && session.status !== 'done' && !session.worker_alive && jsx('div', {
         className: 'text-[0.6875rem] text-(--ui-yellow)',
         children: 'The checker is paused. Ask Hermes "check my Second Hands session" to resume it.'
