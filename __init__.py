@@ -89,6 +89,8 @@ def _live_context(**kwargs):
         if recent:
             lines.append("Recent alerts: " + " | ".join(f"{e['kind']}: {e['message']}" for e in recent))
         lines.append("The user's hands are busy: answer in one or two short sentences. Use second_hands_status for more.")
+        lines.append("If the user asks to start a session or a different task (including a demo), call second_hands_start: "
+                     "it replaces this session. Then put its show_card line on its own paragraph in your reply.")
         return {"context": "\n".join(lines)}
     except Exception:
         return None
