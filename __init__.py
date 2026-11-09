@@ -237,7 +237,7 @@ FINISH_SCHEMA = {
 
 def _cmd_repair(raw_args: str) -> str:
     arg = (raw_args or "").strip()
-    if arg in ("", "help"):
+    if arg.lower() in ("", "help", "demo"):
         return ("Usage: /repair <task>  start a camera-supervised session\n"
                 "       /repair demo <task>  scripted demo, no camera\n"
                 "       /repair status | /repair finish")

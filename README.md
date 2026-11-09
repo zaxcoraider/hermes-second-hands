@@ -63,6 +63,8 @@ In any Hermes Desktop chat:
 
 Or just ask: *"Help me assemble this flat-pack bookshelf, watch me through the camera."* The agent calls `second_hands_start` (it can research the task first and pass what it found as notes), then shows the live card.
 
+In Desktop, `/repair <task>` and `/repair demo <task>` are sent to the agent as that same request, so the live card always lands in the chat (Desktop shows a plugin command's own reply as plain text). `/repair status` and `/repair finish` stay instant. In the CLI and other surfaces, `/repair` starts the session directly.
+
 Open the **Second Hands** pane on the right, choose your camera, press **Start**, and work.
 
 ## How it works

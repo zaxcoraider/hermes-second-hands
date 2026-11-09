@@ -1,6 +1,6 @@
 // Second Hands for Hermes Desktop: live camera pane, status chip and chat card.
 // Disk plugin: plain ESM, no JSX. Talks only to its own backend (dashboard/plugin_api.py).
-import { atom, host, STATUSBAR_AREAS, useValue } from '@hermes/plugin-sdk'
+import { atom, COMPOSER_AREAS, host, STATUSBAR_AREAS, useValue } from '@hermes/plugin-sdk'
 import { useEffect, useRef, useState } from 'react'
 import { jsx, jsxs } from 'react/jsx-runtime'
 
@@ -107,6 +107,27 @@ function announce(s) {
 let ctxRef = null
 
 // ------------------------------------------------------------------ small UI bits
+
+// Desktop shows a plugin slash command's reply as a plain system line, so the
+// live chat card (an agent-reply directive) can't appear there. In Desktop,
+// `/repair <task>` and `/repair demo <task>` become a normal message: the agent
+// calls second_hands_start and replies with the card. status / finish / help
+// stay instant slash commands. CLI and other surfaces keep the plain /repair.
+const REPAIR_PASSTHROUGH = new Set(['', 'help', 'demo', 'status', 'finish', 'stop', 'done'])
+
+function routeRepair(draft) {
+  const m = /^\/repair(?:\s+([\s\S]*))?$/.exec((draft && draft.text ? draft.text : '').trim())
+  if (!m) return draft
+  const arg = (m[1] || '').trim()
+  if (REPAIR_PASSTHROUGH.has(arg.toLowerCase())) return draft
+  const demo = /^demo\s+/i.test(arg)
+  const task = demo ? arg.replace(/^demo\s+/i, '').trim() : arg
+  if (!task) return draft
+  const text = demo
+    ? `Start a Second Hands demo session (scripted, no camera) for: ${task}`
+    : `Start a Second Hands session and watch me through the camera while I: ${task}`
+  return { ...draft, text }
+}
 
 const cls = (...xs) => xs.filter(Boolean).join(' ')
 
@@ -600,7 +621,8 @@ export default {
         id: 'card',
         area: 'transcript.directives',
         data: { name: 'second-hands', render: props => jsx(Card, props) }
-      }
+      },
+      { id: 'repair-route', area: COMPOSER_AREAS.middleware, data: { handler: routeRepair } }
     ])
     for (const ev of ['state', 'alert', 'finished', 'session.started']) ctx.onEvent(`plugin.${ID}.${ev}`, () => refresh())
     ctx.setInterval(refresh, POLL_MS)
