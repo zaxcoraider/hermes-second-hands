@@ -25,6 +25,7 @@ A prompt or a skill can tell you the steps. Only a plugin can **watch you do the
 | The pane, stopping a mistake | The live card in chat, and a double-checked alert |
 |---|---|
 | ![Second Hands pane in Hermes Desktop showing a double-checked STOP at step 4, "Disconnect the battery"](docs/pane-stop.png) | ![The Second Hands live card in the Hermes chat, showing progress and the STOP](docs/chat-card.png) ![STOP alert: levering a lithium battery with a metal tool can puncture it and start a fire](docs/alert-lithium.png) |
+| ![Second Hands report after finishing: 8/8 steps, 3 STOPs, every step confirmed, and the session log](docs/report.png) | ![The chat card after finishing: done, with the one-line summary](docs/chat-card-done.png) |
 
 *Captured in demo mode (`/repair demo replace my Redmi Note 8 battery`): scripted camera observations through the real alert pipeline.*
 
