@@ -113,6 +113,7 @@ let ctxRef = null
 // `/repair <task>` and `/repair demo <task>` become a normal message: the agent
 // calls second_hands_start and replies with the card. status / finish / help
 // stay instant slash commands. CLI and other surfaces keep the plain /repair.
+// The demo sentence must match DEMO_REQUEST_PREFIX in __init__.py (it forces demo mode).
 const REPAIR_PASSTHROUGH = new Set(['', 'help', 'demo', 'status', 'finish', 'stop', 'done'])
 
 function routeRepair(draft) {

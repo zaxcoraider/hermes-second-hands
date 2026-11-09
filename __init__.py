@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import logging
 import threading
+import time
 
 from . import engine, store
 
@@ -17,6 +18,20 @@ log = logging.getLogger(__name__)
 _workers: dict[str, engine.Worker] = {}
 _lock = threading.Lock()
 _ctx = None
+
+# Desktop's /repair route (desktop/plugin.js routeRepair) sends this exact sentence.
+# When we see it, demo mode is forced on the next start: it must not depend on the
+# model remembering demo=true. Keep the two strings in sync.
+DEMO_REQUEST_PREFIX = "Start a Second Hands demo session (scripted, no camera) for:"
+DEMO_REQUEST_TTL_S = 300
+_pending_demo: dict | None = None  # {"task": str, "at": float}
+
+
+def _take_pending_demo() -> dict | None:
+    global _pending_demo
+    with _lock:
+        pd, _pending_demo = _pending_demo, None
+    return pd if pd and time.time() - pd["at"] < DEMO_REQUEST_TTL_S else None
 
 
 def _emit(event: str, payload: dict) -> None:
@@ -67,7 +82,16 @@ def _research(task: str) -> tuple[str, list[dict]]:
 def _live_context(**kwargs):
     """pre_llm_call: while a session is live, tell the agent where the user is, so
     "what step am I on?" or "what did I do wrong?" just works with busy hands."""
+    global _pending_demo
     try:
+        msg = str(kwargs.get("user_message") or "").strip()
+        if msg.startswith(DEMO_REQUEST_PREFIX):
+            task = msg[len(DEMO_REQUEST_PREFIX):].strip()
+            with _lock:
+                _pending_demo = {"task": task, "at": time.time()}
+            return {"context": f"[Second Hands] The user asked for a demo session. Call second_hands_start with "
+                               f"task={json.dumps(task)} and demo=true, then put its show_card line on its own "
+                               "paragraph in your reply."}
         sid = store.active_id()
         st = store.load(sid) if sid else None
         if not st or st["status"] not in ("ready", "live"):
@@ -165,7 +189,11 @@ def _session_or_active(args: dict) -> dict | None:
 
 def _tool_start(args, **kwargs):
     try:
-        return json.dumps(start_session(args.get("task", ""), args.get("notes", ""), args.get("demo")))
+        demo, task = args.get("demo"), args.get("task", "")
+        pending = _take_pending_demo()
+        if pending:  # the user explicitly asked for a demo via /repair demo
+            demo, task = True, task or pending["task"]
+        return json.dumps(start_session(task, args.get("notes", ""), demo))
     except Exception as exc:
         log.exception("second_hands_start failed")
         return json.dumps({"ok": False, "error": str(exc)})
