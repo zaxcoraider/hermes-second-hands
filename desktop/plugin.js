@@ -134,8 +134,8 @@ const cls = (...xs) => xs.filter(Boolean).join(' ')
 
 function Btn({ onClick, children, tone, disabled, title }) {
   const tones = {
-    danger: 'bg-(--ui-red) text-(--ui-base) hover:opacity-90',
-    primary: 'bg-(--ui-accent) text-(--ui-base) hover:opacity-90',
+    danger: 'bg-(--ui-red) text-white hover:opacity-90',
+    primary: 'bg-primary text-primary-foreground hover:opacity-90',
     default: 'bg-(--ui-bg-tertiary) text-(--ui-text-primary) hover:bg-(--ui-control-hover-background)'
   }
   return jsx('button', {
