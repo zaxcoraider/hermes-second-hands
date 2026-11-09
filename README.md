@@ -1,5 +1,7 @@
 # Second Hands for Hermes
 
+![Second Hands: it watches your hands, then it says STOP](docs/banner.png)
+
 **A second pair of eyes on your hands.** Point a camera at your workbench, tell Hermes what you're fixing, building or cooking, and Second Hands watches every step live. Before you make a costly or dangerous mistake, it says **STOP**: out loud, on screen, and with the frame that triggered it.
 
 > "Replace my Redmi Note 8 battery" → an 8-step guide with the mistakes that matter → a live camera pane in Hermes Desktop → **STOP. Disconnect the battery before any other connector.**

@@ -129,6 +129,19 @@ function Btn({ onClick, children, tone, disabled, title }) {
   })
 }
 
+// The Second Hands mark: red status ring + clock second hand. Inline SVG, no network.
+// The hand uses currentColor so it follows the light/dark theme.
+function Logo({ size = 16 }) {
+  return jsxs('svg', {
+    viewBox: '82 82 348 348', width: size, height: size, 'aria-hidden': true, className: 'shrink-0',
+    children: [
+      jsx('path', { d: 'M271.7 106.8 A150 150 0 1 1 240.3 106.8', fill: 'none', stroke: '#FF5A52', strokeWidth: 44 }),
+      jsx('line', { x1: 256, y1: 256, x2: 256, y2: 132, stroke: 'currentColor', strokeWidth: 30, strokeLinecap: 'round', transform: 'rotate(48 256 256)' }),
+      jsx('circle', { cx: 256, cy: 256, r: 28, fill: 'currentColor' })
+    ]
+  })
+}
+
 function Label({ children }) {
   return jsx('div', {
     className: 'text-[0.625rem] font-semibold tracking-[0.12em] uppercase text-(--ui-text-tertiary)',
@@ -422,7 +435,10 @@ function Empty() {
   return jsxs('div', {
     className: 'flex flex-col gap-2 rounded-lg border border-dashed border-(--ui-stroke-secondary) p-3 text-[0.75rem] text-(--ui-text-secondary)',
     children: [
-      jsx('div', { className: 'text-[0.875rem] font-semibold text-(--ui-text-primary)', children: 'An extra pair of eyes on your hands' }),
+      jsxs('div', {
+        className: 'flex items-center gap-2 text-[0.875rem] font-semibold text-(--ui-text-primary)',
+        children: [jsx(Logo, { size: 28 }), 'An extra pair of eyes on your hands']
+      }),
       jsx('div', { children: 'Ask Hermes for help with a hands-on task, or type:' }),
       jsx('code', { className: 'rounded bg-(--ui-inline-code-background) px-1.5 py-1 font-mono text-[0.6875rem]', children: '/repair replace my Redmi Note 8 battery' }),
       jsx('code', { className: 'rounded bg-(--ui-inline-code-background) px-1.5 py-1 font-mono text-[0.6875rem]', children: '/repair demo dice an onion' }),
@@ -444,7 +460,10 @@ function Pane() {
       jsxs('div', {
         className: 'flex items-center justify-between',
         children: [
-          jsx('div', { className: 'text-[0.75rem] font-black tracking-[0.2em]', children: 'SECOND HANDS' }),
+          jsxs('div', {
+            className: 'flex items-center gap-1.5 text-[0.75rem] font-black tracking-[0.2em]',
+            children: [jsx(Logo, { size: 16 }), 'SECOND HANDS']
+          }),
           jsxs('div', {
             className: 'flex items-center gap-2 text-[0.6875rem] text-(--ui-text-tertiary)',
             children: [
@@ -546,7 +565,7 @@ function Card({ attrs }) {
     children: [
       jsxs('div', {
         className: 'flex items-center justify-between',
-        children: [jsx(Label, { children: 'Second Hands' }), jsx('span', { className: 'text-[0.6875rem] text-(--ui-text-tertiary)', children: s.status })]
+        children: [jsxs('div', { className: 'flex items-center gap-1.5', children: [jsx(Logo, { size: 14 }), jsx(Label, { children: 'Second Hands' })] }), jsx('span', { className: 'text-[0.6875rem] text-(--ui-text-tertiary)', children: s.status })]
       }),
       jsx('div', { className: 'text-[0.875rem] font-semibold', children: s.guide.title }),
       jsx('div', {
