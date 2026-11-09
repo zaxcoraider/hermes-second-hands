@@ -100,6 +100,7 @@ What you should know before installing (catalog rule 13):
 - **Camera:** the Desktop pane opens your camera with the OS permission prompt. It stays on only while the pane is open with an active session, and frames are sent only while a session is live (after **Start**).
 - **Files:** reads and writes only `<hermes home>/plugin-data/second-hands/`: session state, the newest frame, and a thumbnail of each frame that triggered an alert. Nothing outside it. Delete the folder to clear history.
 - **Background work:** one thread per live session, in the Hermes process that started it. It stops when the session finishes or after 30 idle minutes.
+- **Desktop input:** a draft that is exactly `/repair <task>` or `/repair demo <task>` is rewritten into a plain request to the agent (so the live card can appear in its reply). Every other message is passed through unchanged.
 - **No** shell commands, no credentials stored or read, no telemetry. Voice uses the OS speech engine locally.
 - **Safety:** this is an assistant, not a guarantee. It can miss mistakes. It refuses tasks where a miss could seriously injure someone.
 
